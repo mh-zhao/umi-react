@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import { history } from 'umi'
+import { getSessionStorage } from '@/utils/index'
 import { Layout, Menu, Row, Col, Dropdown, Breadcrumb } from 'antd'
 import {
   MenuUnfoldOutlined,
@@ -30,7 +31,17 @@ const mapStateToProps = (state:any) => {
 class MyHeader extends React.Component {
   constructor(props:any) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
+  }
+
+  UNSAFE_componentWillMount() {
+    const { dispatch } = this.props;
+    const breadcrumbList = getSessionStorage('breadcrumbList');
+    dispatch({
+      type: 'common/save',
+      payload: {breadcrumb: breadcrumbList}
+    })
   }
 
   componentDidMount() {
@@ -38,7 +49,7 @@ class MyHeader extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeEvent)
+    window.removeEventListener('resize', this.resizeEvent);
   }
   
 
@@ -73,7 +84,6 @@ class MyHeader extends React.Component {
       type: 'common/save',
       payload: {isFull}
     })
-    console.log('1111')
   }
   
   renderBtn = () => {
@@ -86,6 +96,29 @@ class MyHeader extends React.Component {
           退出登录
         </Menu.Item>
       </Menu>
+    )
+  }
+
+  renderThemeBtn = () => {
+    return (
+      <Menu onClick={this.onThemeBtn} style={{marginTop:15}}>
+        <Menu.Item key="#eacd76">
+          金色
+        </Menu.Item>
+        <Menu.Item key="#065279">
+          靛蓝
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  onThemeBtn = (e:any) => {
+    const {key} = e;
+    console.log('皮肤', key)
+    window.less.modifyVars(//更换主题颜色要这么写
+      {
+        '@primary-color': key,
+      }
     )
   }
 
@@ -138,10 +171,14 @@ class MyHeader extends React.Component {
               }
               </span>
 
-              <BgColorsOutlined onClick={this.changeBg} />
+              <Dropdown overlay={this.renderThemeBtn}>
+                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                <BgColorsOutlined onClick={this.changeBg} />
+                </a>
+              </Dropdown>
             
               <GlobalOutlined onClick={this.changeLanguage} />
-
+              
               <Dropdown overlay={this.renderBtn}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                   admin <DownOutlined />

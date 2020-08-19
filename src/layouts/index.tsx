@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import style from './index.less'
 import MyHeader from './components/Header'
+import { setSessionStorage } from '@/utils/index'
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -20,8 +21,8 @@ const mapStateToProps = (state:any) => {
 const BasicLayout = (props: any) => {
   const { history, location, dispatch, collapsed } = props;
   const { routes } = props.routes[0];
-  const defaultSelectedKey = location.pathname || '/'
-  // 菜单
+  const defaultSelectedKey = location.pathname || '/';
+// 菜单
   const handleMenuItem = (item:any) => {
     const { key, keyPath } = item;
     console.log('menu', item)
@@ -46,6 +47,9 @@ const BasicLayout = (props: any) => {
       type: 'common/save',
       payload: {breadcrumb: breadcrumbData,defaultSelectedKey: [key]}
     })
+
+    setSessionStorage('breadcrumbList',breadcrumbData);
+
     history.push(key)
   }
   const renderMenu = (menu:any[]):any => {
@@ -100,7 +104,7 @@ const BasicLayout = (props: any) => {
         className={collapsed ? style['site-layout'] : style['site-layout-collapsed']}
       >
         {/* 顶部导航 */}
-        <MyHeader />
+        <MyHeader location={location} routes={routes} />
         
         {/* 主体内容 */}
         <Content className={style['z-layout-content']}>

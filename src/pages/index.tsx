@@ -29,6 +29,7 @@ class Index extends React.Component {
 
   render() {
     const { count } = this.props;
+    // console.log('首页', this.props)
     return (
       <div>
         <Button type="primary">Primary Button</Button>

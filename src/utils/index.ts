@@ -24,3 +24,30 @@ export const exitFullscreen = () => {
       document.webkitExitFullscreen();
   }
 }
+
+
+/*
+ * 设置setLocalStorage
+ * */
+export function setLocalStorage(key:string, value:any):void {
+    window.localStorage.setItem(key, window.JSON.stringify(value));
+  }
+  /*
+   * 获取getLocalStorage
+   * */
+  export function getLocalStorage(key:string):any {
+    return window.JSON.parse(window.localStorage.getItem(key) || "[]");
+  }
+  /*
+   * 设置setSessionStorage
+   * */
+  export function setSessionStorage(key:string, value:any):void {
+    window.sessionStorage.setItem(key, window.JSON.stringify(value));
+  }
+  /*
+   * 获取getSessionStorage
+   * */
+  export function getSessionStorage(key:string):any {
+    return window.JSON.parse(window.sessionStorage.getItem(key) || "[]");
+  }
+  
